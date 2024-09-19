@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
+
 # Cargar el dataset
 df = pd.read_csv("code/dataset/FIFA21.csv")
 
@@ -13,13 +14,14 @@ relevant_feature = "overall"
 df = df[["long_name", "value_eur", relevant_feature]].dropna()
 
 # Eliminar todos los valores cuyo overall sea menor a 65
-# ya que al ser tan pocos no aportan información relevante
 df = df[df[relevant_feature] > 65]
+
+# Normalizar la columna 'value_eur' a un rango de 0 a 100
+df['value_eur_normalized'] = 100 * (df['value_eur'] - df['value_eur'].min()) / (df['value_eur'].max() - df['value_eur'].min())
 
 # Definir las variables
 x = df[relevant_feature]
-y = df['value_eur']
-
+y = df['value_eur_normalized']
 
 # Grafico con los datos obtenidos
 # plt.scatter(x, y, color='red')
@@ -28,9 +30,8 @@ y = df['value_eur']
 # plt.ylabel('Value')
 # plt.show()
 
-# *
-# * Recta de regresión para predecir el valor de mercado
-# * de un jugador a partir de la característica más relevante
+# Recta de regresión para predecir el valor de mercado
+# de un jugador a partir de la característica más relevante
 
 # Calcular la sumatoria de las variables x e y
 x_sum = x.sum()
@@ -45,8 +46,8 @@ x_sq_sum = (x ** 2).sum()
 y_sq_sum = (y ** 2).sum()
 
 # Sigma al cuadrado de x e y (varianza corregida)
-x_var = x_sq_sum / len(x) - (x_sum ** 2)
-y_var = y_sq_sum / len(y) - (y_sum ** 2)
+x_var = x_sq_sum / len(x) - (x_sum ** 2) / len(x)**2
+y_var = y_sq_sum / len(y) - (y_sum ** 2) / len(y)**2
 
 # Sigma de xy
 xy_dev = ((x * y).sum() / len(x)) - (x_avg * y_avg)
@@ -55,7 +56,7 @@ xy_dev = ((x * y).sum() / len(x)) - (x_avg * y_avg)
 b1 = xy_dev / x_var
 b0 = y_avg - b1 * x_avg
 
-# Estimación de minimos cuadrados
+# Estimación de mínimos cuadrados
 Sxy = (x * y).sum() - ((x.sum() * y.sum()) / len(x))
 Sxx = x_sq_sum - ((x.sum() ** 2) / len(x))
 Syy = y_sq_sum - ((y.sum() ** 2) / len(y))
@@ -71,12 +72,12 @@ plt.scatter(x, y, color='red', label='Datos')
 plt.plot(x, y_hat, color='blue', label='Recta de regresión')
 plt.title('Value vs ' + relevant_feature + 'con Recta de Regresión')
 plt.xlabel(relevant_feature)
-plt.ylabel('Value')
+plt.ylabel('Value Normalized')
 plt.legend()
 plt.show()
 
-# * i) Prueba de significancia de regresión, coeficiente de determinación (R²)
-# * y correlación lineal (r).
+# i) Prueba de significancia de regresión, coeficiente de determinación (R²)
+# y correlación lineal (r).
 
 SSr = Syy - (b1_hat * Sxy)
 
@@ -88,7 +89,6 @@ R2 = 1 - SSr/Syy
 
 # Coeficiente de Correlación Lineal
 r = Sxy / sqrt(Sxx * Syy)
-
 
 # Imprimir los resultados
 print("SSr: " + str(SSr))
@@ -112,20 +112,17 @@ p = 2 * (1 - stats.t.cdf(abs(t), dflen))
 print("Error estandar de la pendiente: " + str(error_estandar_pendiente))
 print("Test de Hipótesis: " + str(t))
 
-
-# * ii) Inferencias sobre los parámetros de la recta, estimando las
-# * fluctuaciones con una confianza del 95%.
+# ii) Inferencias sobre los parámetros de la recta, estimando las
+# fluctuaciones con una confianza del 95%.
 # Conclusión del test
 if p < 0.05:
     print("Se rechaza la hipótesis nula")
 else:
     print("No se rechaza la hipótesis nula")
 
-
-# * iii) La proporción de veces que el valor de mercado supera la incertidumbre
-# * de predicción
-# * comparada con la respuesta media del valor de mercado para una
-# * característica fija, ambas con la misma confianza y ancho mínimo.
+# iii) La proporción de veces que el valor de mercado supera la incertidumbre
+# de predicción comparada con la respuesta media del valor de mercado para una
+# característica fija, ambas con la misma confianza y ancho mínimo.
 
 # Parámetros
 alpha = 0.05

@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# * b) Ecuación para predecir el valor de mercado del jugador
-# * a partir de varias características.
-
 # Cargar el dataset
 df = pd.read_csv("code/dataset/FIFA21.csv")
 
@@ -15,36 +12,35 @@ df = df[[y_key, x1_key, x2_key]].dropna()
 
 # Filtrar datos con overall mayor a 65
 df = df[df["overall"] > 65]
-# df = df[df["potential"] > 65]
-
-# * i) Usando el método de mínimos cuadrados. Explica los indicadores obtenidos
-# *  (como el coeficiente de determinación y la correlación) y proporciona una
-# * breve interpretación de los resultados
-
 
 # Definir las variables
 x1 = df[x1_key].values
 x2 = df[x2_key].values
 y = df[y_key].values
 
-x1_sum = x1.sum()
-x2_sum = x2.sum()
-y_sum = y.sum()
+# Normalizar y a valores entre 0 y 100
+y_min = y.min()
+y_max = y.max()
 
-print(y.mean())
+y_normalized = 100 * (y - y_min) / (y_max - y_min)
+
+# Imprimir estadísticas de la normalización
+print(f"Min y: {y_min}, Max y: {y_max}")
+print(f"y_normalized (primeros 5 valores): {y_normalized[:5]}")
 
 # Calcular la suma de los cuadrados de x1 y x2
+x1_sum = x1.sum()
+x2_sum = x2.sum()
+y_sum = y_normalized.sum()
+
 x1_square = (x1 ** 2).sum()
 x2_square = (x2 ** 2).sum()
 
-# Calcular la suma de los productos de x1 y x2
 x1_x2 = (x1 * x2).sum()
 
-# Calcular la suma de los productos de x1 e y
-x1_y = (x1 * y).sum()
+x1_y = (x1 * y_normalized).sum()
+x2_y = (x2 * y_normalized).sum()
 
-# Calcular la suma de los productos de x2 e y
-x2_y = (x2 * y).sum()
 # Resolver el sistema de ecuaciones
 A = np.array([
     [len(y), x1_sum, x2_sum],
@@ -64,18 +60,21 @@ b2 = beta[2]  # Coeficiente de x2
 # Mostrar los coeficientes de la regresión
 print(f"Coeficiente b0 (intersección): {b0}")
 print(f"Coeficiente b1 (Overall): {b1}")
-print(f"Coeficiente b2 (Age): {b2}")
+print(f"Coeficiente b2 (Potential): {b2}")
 
 # Predicción usando la ecuación de regresión múltiple
-y_hat = b0 + b1 * x1 + b2 * x2
+y_hat_normalized = b0 + b1 * x1 + b2 * x2
+
+# Desnormalizar las predicciones para compararlas con el rango original
+y_hat = y_min + (y_hat_normalized / 100) * (y_max - y_min)
 
 # Imprimir predicciones
 print(f"Predicciones: {y_hat[:5]}")  # Mostrar solo las primeras 5 predicciones
+
 # Imprimir la ecuación de regresión múltiple
 print(f"Ecuación de regresión múltiple: y_hat = {b0} + {b1}*x1 + {b2}*x2")
 
-
-# Calcular R^2
+# Calcular R²
 ss_res = np.sum((y - y_hat) ** 2)  # Suma de los residuos al cuadrado
 ss_tot = np.sum((y - y.mean()) ** 2)  # Suma total de los cuadrados
 r2 = 1 - (ss_res / ss_tot)
@@ -87,14 +86,3 @@ corr_potential = np.corrcoef(x2, y)[0, 1]
 
 print(f"Correlación entre overall y value_eur: {corr_overall}")
 print(f"Correlación entre potential y value_eur: {corr_potential}")
-print()
-
-# * ii) Usando el método de descenso por gradiente. ¿Son los valores obtenidos iguales a los
-# * conseguidos mediante la resolución del sistema de ecuaciones normales? Muestra los
-# * resultados obtenidos junto con las últimas iteraciones del algoritmo. Indica los valores de los
-# * parámetros utilizados (como tasa de aprendizaje y número de iteraciones)
-
-
-# * iii) Da una interpretación del criterio de corte utilizado en el algoritmo del gradiente. Explica
-# * si presenta alguna falla. Si no es una buena condición de corte, ¿puedes sugerir un criterio
-# * alternativo más eficaz?
