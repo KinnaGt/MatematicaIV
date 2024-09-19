@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 # Cargar el dataset
-df = pd.read_csv("code/dataset/FIFA21.csv")
+df = pd.read_csv("dataset/FIFA21.csv")
 
 relevant_feature = "overall"
 # Seleccionar las columnas de interés
@@ -137,12 +137,10 @@ x0 = x.mean()  # Característica fija, puedes cambiar a otro valor específico
 y0_hat = b0_hat + b1_hat * x0
 
 # Incertidumbre de predicción
-pred_interval = t_alpha_half * \
-    sqrt(sigma_hat_sqrd * (1 + 1 / len(x) + (x0 - x_avg)**2 / Sxx))
+pred_interval = t_alpha_half * sqrt(sigma_hat_sqrd * (1 + 1 / len(x) + (x0 - x_avg)**2 / Sxx))
 
 # Intervalo de confianza para la media
-conf_interval = t_alpha_half * \
-    sqrt(sigma_hat_sqrd / len(x) + (x0 - x_avg)**2 / Sxx)
+conf_interval = t_alpha_half * sqrt(sigma_hat_sqrd / len(x) + (x0 - x_avg)**2 / Sxx)
 
 # Calcular la proporción de veces que el valor de mercado supera la incertidumbre de predicción
 exceeds_prediction_interval = np.sum(
