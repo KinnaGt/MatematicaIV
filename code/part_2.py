@@ -2,12 +2,12 @@ import pandas as pd
 import numpy as np
 
 # Cargar el dataset
-df = pd.read_csv("code/dataset/test.csv")
+df = pd.read_csv("code/dataset/FIFA21.csv")
 
 # Seleccionar las columnas de interés
-y_key = 'PesoFY'
-x1_key = 'PesoIX1'
-x2_key = 'PesoAX2'
+y_key = 'value_eur'
+x1_key = 'overall'
+x2_key = 'potential'
 df = df[[y_key, x1_key, x2_key]].dropna()
 
 # Filtrar datos con overall mayor a 65
@@ -46,4 +46,24 @@ A = np.array([
     [x2_sum, x1_x2, x2_square]
 ])
 
-print(A)
+B = np.array([y_sum, x1_y, x2_y])
+
+beta = np.linalg.solve(A, B)
+
+# Extraer los coeficientes de regresión
+b0 = beta[0]  # Intersección
+b1 = beta[1]  # Coeficiente de x1
+b2 = beta[2]  # Coeficiente de x2
+
+# Mostrar los coeficientes de la regresión
+print(f"Coeficiente b0 (intersección): {b0}")
+print(f"Coeficiente b1 (PesoIX1): {b1}")
+print(f"Coeficiente b2 (PesoAX2): {b2}")
+
+# Predicción usando la ecuación de regresión múltiple
+y_hat = b0 + b1 * x1 + b2 * x2
+
+# Imprimir predicciones
+print(f"Predicciones: {y_hat[:5]}")  # Mostrar solo las primeras 5 predicciones
+# Imprimir la ecuación de regresión múltiple
+print(f"Ecuación de regresión múltiple: y_hat = {b0} + {b1}*x1 + {b2}*x2")
