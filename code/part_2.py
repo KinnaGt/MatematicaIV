@@ -34,11 +34,6 @@ x1_y = (x1 * y).sum()
 
 # Calcular la suma de los productos de x2 e y
 x2_y = (x2 * y).sum()
-
-# Armar matriz nβ0 + β1Sumatoria x1i + β2S umatoriax 2i = Sumatoria yi
-# β0Sumatoriax1i + β1 Sumatoriax1i 2 + β2Sumatoria x1ix2i = Sumatoria x1iyi
-# β0Sumatoriax2i + β1β0Sumatoriax2ix1ix2i + β2β0Sumatoriax2ix2i 2 = β0Sumatoriax2ix2iyi
-
 # Resolver el sistema de ecuaciones
 A = np.array([
     [len(y), x1_sum, x2_sum],

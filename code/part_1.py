@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 
 # Cargar el dataset
-df = pd.read_csv("dataset/FIFA21.csv")
+df = pd.read_csv("code/dataset/FIFA21.csv")
 
 relevant_feature = "overall"
 # Seleccionar las columnas de interés

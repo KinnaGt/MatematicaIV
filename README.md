@@ -15,7 +15,7 @@ git clone <url-del-repositorio>
 ### 2. Crear un entorno virtual
 
 ```bash
-python -m venv venv
+py -m venv venv
 ```
 
 ### 3. Activar el entorno virtual
@@ -31,5 +31,5 @@ pip install -r requirements.txt
 
 ### 5. Ejecutar el proyecto
 ```bash
-python src/main.py
+py <archivo.py>
 ```
