@@ -13,7 +13,7 @@ relevant_feature = "overall"
 # Seleccionar las columnas de interés
 df = df[["long_name", "value_eur", relevant_feature]].dropna()
 
-# Eliminar todos los valores cuyo overall sea menor a 60
+# Eliminar todos los valores cuyo overall sea menor a 65
 # ya que al ser tan pocos no aportan información relevante
 df = df[df[relevant_feature] > 65]
 
@@ -70,11 +70,11 @@ y_hat = b0_hat + b1_hat * x
 # Dibujar recta a partir de y_hat
 plt.scatter(x, y, color='red', label='Datos')
 plt.plot(x, y_hat, color='blue', label='Recta de regresión')
-plt.title('Value vs Overall con Recta de Regresión')
-plt.xlabel('Overall')
+plt.title('Value vs Age con Recta de Regresión')
+plt.xlabel('Age')
 plt.ylabel('Value')
 plt.legend()
-# plt.show()
+plt.show()
 
 # * i) Prueba de significancia de regresión, coeficiente de determinación (R²)
 # * y correlación lineal (r).

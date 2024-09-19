@@ -10,7 +10,6 @@ Primero, clona este repositorio en tu máquina local usando Git.
 
 ```bash
 git clone <url-del-repositorio>
-cd mi_proyecto
 ```
 
 ### 2. Crear un entorno virtual
