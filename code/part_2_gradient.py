@@ -11,6 +11,10 @@ x1_key = 'overall'
 x2_key = 'potential'
 df = df[[y_key, x1_key, x2_key]].dropna()
 
+# Filtrar datos con overall mayor a 55 y menor a 80
+df = df[df["overall"] > 55]
+df = df[df["overall"] < 80]
+
 # Verificar y limpiar datos
 df = df.replace([np.inf, -np.inf], np.nan).dropna()
 
