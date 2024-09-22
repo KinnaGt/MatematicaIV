@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Cargar el dataset
 df = pd.read_csv("code/dataset/FIFA21.csv")
@@ -10,8 +11,9 @@ x1_key = 'overall'
 x2_key = 'potential'
 df = df[[y_key, x1_key, x2_key]].dropna()
 
-# Filtrar datos con overall mayor a 65
-df = df[df["overall"] > 65]
+# Filtrar datos con overall mayor a 55
+df = df[df[x1_key] > 55]
+df = df[df[x1_key] < 80]
 
 # Definir las variables
 x1 = df[x1_key].values
@@ -74,6 +76,27 @@ print(f"Predicciones: {y_hat[:5]}")  # Mostrar solo las primeras 5 predicciones
 # Imprimir la ecuación de regresión múltiple
 print(f"Ecuación de regresión múltiple: y_hat = {b0} + {b1}*x1 + {b2}*x2")
 
+
+# Crear el gráfico de dispersión
+plt.scatter(y, y_hat, color='blue', label='Predicciones vs Valores Reales')
+
+# Añadir la línea de referencia de "predicción perfecta"
+min_val = min(y.min(), y_hat.min())
+max_val = max(y.max(), y_hat.max())
+plt.plot([min_val, max_val], [min_val, max_val], color='red', linestyle='--', label='Línea Ideal (y = y_hat)')
+
+# Etiquetas del gráfico
+plt.xlabel('Valor Real (y)')
+plt.ylabel('Valor Predicho (y_hat)')
+plt.title('Regresión Lineal Múltiple: Predicción vs Real')
+
+# Mostrar leyenda
+plt.legend()
+
+# Mostrar gráfico
+plt.grid()
+plt.show()
+
 # Calcular R²
 ss_res = np.sum((y - y_hat) ** 2)  # Suma de los residuos al cuadrado
 ss_tot = np.sum((y - y.mean()) ** 2)  # Suma total de los cuadrados
@@ -86,3 +109,14 @@ corr_potential = np.corrcoef(x2, y)[0, 1]
 
 print(f"Correlación entre overall y value_eur: {corr_overall}")
 print(f"Correlación entre potential y value_eur: {corr_potential}")
+
+
+# *ii) Usando el método de descenso por gradiente. ¿Son los valores obtenidos iguales a los
+# * conseguidos mediante la resolución del sistema de ecuaciones normales? Muestra los
+# * resultados obtenidos junto con las últimas iteraciones del algoritmo. Indica los valores de los
+# * parámetros utilizados (como tasa de aprendizaje y número de iteraciones)
+
+
+# * iii) Da una interpretación del criterio de corte utilizado en el algoritmo del gradiente. Explica
+# * si presenta alguna falla. Si no es una buena condición de corte, ¿puedes sugerir un criterio
+# * alternativo más eficaz?

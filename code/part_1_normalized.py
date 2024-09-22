@@ -13,8 +13,10 @@ relevant_feature = "overall"
 # Seleccionar las columnas de interés
 df = df[["long_name", "value_eur", relevant_feature]].dropna()
 
-# Eliminar todos los valores cuyo overall sea menor a 65
-df = df[df[relevant_feature] > 65]
+
+# Eliminar todos los valores cuyo overall sea menor a 60 o mayor a 80 ya que no son relevantes
+df = df[df["overall"] > 55]
+df = df[df["overall"] < 80]
 
 # Normalizar la columna 'value_eur' a un rango de 0 a 100
 df['value_eur_normalized'] = 100 * (df['value_eur'] - df['value_eur'].min()) / (df['value_eur'].max() - df['value_eur'].min())
@@ -74,6 +76,7 @@ plt.title('Value vs ' + relevant_feature + 'con Recta de Regresión')
 plt.xlabel(relevant_feature)
 plt.ylabel('Value Normalized')
 plt.legend()
+plt.grid()
 plt.show()
 
 # i) Prueba de significancia de regresión, coeficiente de determinación (R²)
