@@ -14,7 +14,7 @@ relevant_feature = "overall"
 df = df[["long_name", "value_eur", relevant_feature]].dropna()
 
 
-# Eliminar todos los valores cuyo overall sea menor a 60 o mayor a 80 ya que no son relevantes
+# Eliminar todos los valores cuyo overall sea menor a 60 o mayor a 80 ya que pueden ser outliers(valores atipicos)
 df = df[df["overall"] > 55]
 df = df[df["overall"] < 80]
 
@@ -26,11 +26,11 @@ x = df[relevant_feature]
 y = df['value_eur_normalized']
 
 # Grafico con los datos obtenidos
-# plt.scatter(x, y, color='red')
-# plt.title('Value vs Overall')
-# plt.xlabel('Overall')
-# plt.ylabel('Value')
-# plt.show()
+plt.scatter(x, y, color='red')
+plt.title('Value vs Overall')
+plt.xlabel('Overall')
+plt.ylabel('Value')
+plt.show()
 
 # Recta de regresión para predecir el valor de mercado
 # de un jugador a partir de la característica más relevante

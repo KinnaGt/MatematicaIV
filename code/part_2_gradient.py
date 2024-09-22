@@ -2,8 +2,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# *ii) Usando el método de descenso por gradiente. ¿Son los valores obtenidos iguales a los
+# * conseguidos mediante la resolución del sistema de ecuaciones normales? Muestra los
+# * resultados obtenidos junto con las últimas iteraciones del algoritmo. Indica los valores de los
+# * parámetros utilizados (como tasa de aprendizaje y número de iteraciones)
+
+
 # Cargar el dataset
-df = pd.read_csv("dataset/FIFA21.csv")
+df = pd.read_csv("code/dataset/FIFA21.csv")
 
 # Seleccionar las columnas de interés
 y_key = 'value_eur'
@@ -24,11 +30,14 @@ x2 = df[x2_key].values
 y = df[y_key].values
 
 # Normalizar los datos manualmente
+
+
 def normalize(X):
     means = np.mean(X, axis=0)
     stds = np.std(X, axis=0)
     normalized_X = (X - means) / stds
     return normalized_X, means, stds
+
 
 # Agregar una columna de 1s para el término de intersección
 X = np.vstack([x1, x2]).T
@@ -42,6 +51,8 @@ max_iterations = 1000
 tolerance = 1e-6
 
 # Función de costo
+
+
 def compute_cost(X, y, theta):
     m = len(y)
     predictions = X.dot(theta)
@@ -49,36 +60,38 @@ def compute_cost(X, y, theta):
     cost = (1 / (2 * m)) * np.sum(errors ** 2)
     return cost
 
+
 # Descenso por gradiente con criterio de convergencia
 cost_history = []
 for i in range(max_iterations):
     predictions = X.dot(theta)
     errors = predictions - y
     gradient = (1 / len(y)) * X.T.dot(errors)
-    
+
     # Debugging prints
     # print(f"Iteration {i+1}")
     # print(f"Predictions: {predictions[:5]}")
     # print(f"Errors: {errors[:5]}")
     # print(f"Gradient: {gradient}")
-    
+
     theta -= alpha * gradient
     cost = compute_cost(X, y, theta)
-    
+
     # Debugging cost
     # print(f"Cost: {cost}")
 
     cost_history.append(cost)
-    
+
     # Verificar la convergencia
     if i > 0 and abs(cost_history[-1] - cost_history[-2]) < tolerance:
         print(f"Convergencia alcanzada después de {i+1} iteraciones")
         break
 
+
 # Mostrar los resultados finales
 print(f"Coeficiente b0 (intersección): {theta[0]}")
-print(f"Coeficiente b1 (PesoIX1): {theta[1]}")
-print(f"Coeficiente b2 (PesoAX2): {theta[2]}")
+print(f"Coeficiente b1 (Overall): {theta[1]}")
+print(f"Coeficiente b2 (Potential): {theta[2]}")
 
 # Predicción usando la ecuación de regresión múltiple
 y_hat = X.dot(theta)
@@ -110,23 +123,27 @@ SST = np.sum((y - y_avg) ** 2)
 # Calcular el coeficiente de determinación (R²)
 R_squared = 1 - (SSR / SST)
 
-# Calcular el coeficiente de determinación ajustado (Ra²)
-R_adjusted_squared = 1 - (1 - R_squared) * (n - 1) / (n - k - 1)
+# # Calcular el coeficiente de determinación ajustado (Ra²)
+# R_adjusted_squared = 1 - (1 - R_squared) * (n - 1) / (n - k - 1)
 
-# Calcular la raíz cuadrada del coeficiente de determinación ajustado (ra)
-ra = np.sqrt(R_adjusted_squared)
+# # Calcular la raíz cuadrada del coeficiente de determinación ajustado (ra)
+# ra = np.sqrt(R_adjusted_squared)
+
+# Calcular el coeficiente de correlación entre las predicciones y los valores reales
+correlation = np.corrcoef(y_hat, y)[0, 1]
 
 # Imprimir los resultados
 print(f"Coeficiente de Determinación (R²): {R_squared}")
-print(f"Coeficiente de Determinación Ajustado (Ra²): {R_adjusted_squared}")
-print(f"Raíz del Coeficiente de Determinación Ajustado (ra): {ra}")
+print(f"Coeficiente de correlación: {correlation}")
+# print(f"Coeficiente de Determinación Ajustado (Ra²): {R_adjusted_squared}")
+# print(f"Raíz del Coeficiente de Determinación Ajustado (ra): {ra}")
 
 # Gráfico de Predicciones vs Valores Reales
 plt.figure(figsize=(12, 6))
 
 plt.subplot(1, 3, 1)
-plt.scatter(y, y_hat, color='blue')
-plt.plot([min(y), max(y)], [min(y), max(y)], color='red', linestyle='--')
+plt.scatter(y, y_hat, color='red')
+plt.plot([min(y), max(y)], [min(y), max(y)], color='blue', linestyle='--')
 plt.title('Predicciones vs Valores Reales')
 plt.xlabel('Valores Reales')
 plt.ylabel('Predicciones')
@@ -134,13 +151,12 @@ plt.ylabel('Predicciones')
 # Gráfico de Residuos
 residuos = y - y_hat
 plt.subplot(1, 3, 2)
-plt.scatter(y_hat, residuos, color='blue')
-plt.axhline(0, color='red', linestyle='--')
+plt.scatter(y_hat, residuos, color='red')
+plt.axhline(0, color='blue', linestyle='--')
 plt.title('Residuos vs Predicciones')
 plt.xlabel('Predicciones')
 plt.ylabel('Residuos')
 plt.tight_layout()
-
 
 
 # Gráfico de la función de costo durante las iteraciones

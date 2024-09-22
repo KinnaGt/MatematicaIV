@@ -11,7 +11,7 @@ x1_key = 'overall'
 x2_key = 'potential'
 df = df[[y_key, x1_key, x2_key]].dropna()
 
-# Filtrar datos con overall mayor a 55
+# Eliminar todos los valores cuyo overall sea menor a 60 o mayor a 80 ya que pueden ser outliers(valores atipicos)
 df = df[df[x1_key] > 55]
 df = df[df[x1_key] < 80]
 
@@ -106,17 +106,8 @@ print(f"Coeficiente de determinación (R²): {r2}")
 
 corr_overall = np.corrcoef(x1, y)[0, 1]
 corr_potential = np.corrcoef(x2, y)[0, 1]
+corr_real_pred = np.corrcoef(y, y_hat)[0, 1]
 
+print(f"Correlación entre y (valor real) y y_hat (valor predicho): {corr_real_pred}")
 print(f"Correlación entre overall y value_eur: {corr_overall}")
 print(f"Correlación entre potential y value_eur: {corr_potential}")
-
-
-# *ii) Usando el método de descenso por gradiente. ¿Son los valores obtenidos iguales a los
-# * conseguidos mediante la resolución del sistema de ecuaciones normales? Muestra los
-# * resultados obtenidos junto con las últimas iteraciones del algoritmo. Indica los valores de los
-# * parámetros utilizados (como tasa de aprendizaje y número de iteraciones)
-
-
-# * iii) Da una interpretación del criterio de corte utilizado en el algoritmo del gradiente. Explica
-# * si presenta alguna falla. Si no es una buena condición de corte, ¿puedes sugerir un criterio
-# * alternativo más eficaz?
