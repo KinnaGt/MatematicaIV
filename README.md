@@ -29,7 +29,7 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 5. Ejecutar el proyecto
+### 5. Ejecutar el archivo que quieras
 ```bash
-py <archivo.py>
+py <nombredearchivo.py>
 ```
